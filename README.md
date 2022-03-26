@@ -39,6 +39,12 @@ Param(
 [string]$name
 )
 
+# HardCode Params *4Debug
+# $loginId='artiomlk@contoso.com'
+# $subscriptionId='xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'
+# $resourceGroupName='rg-app-where-app-certificate'
+# $name='my-app-certificate'
+
 ###########################################################
 
 Connect-AzAccount
@@ -56,10 +62,11 @@ $keyVaultIdParts = $keyVaultId.Split("/")
 $keyVaultName = $keyVaultIdParts[$keyVaultIdParts.Length - 1]
 $keyVaultResourceGroupName = $keyVaultIdParts[$keyVaultIdParts.Length - 5]
 
-# Print Variables
-# Write-Host "ascResource: $ascResource `n"
-# Write-Host "certProps: $certProps `n"
-# Write-Host "keyVaultIdParts: $keyVaultIdParts `n"
+# Print Variables *4Debug
+Write-Host "ascResource: $ascResource `n"
+Write-Host "certProps: $certProps `n"
+Write-Host "keyVaultIdParts: $keyVaultIdParts `n"
+
 Write-Host "certificateName: $certificateName `n"
 Write-Host "keyVaultId: $keyVaultId `n"
 Write-Host "keyVaultSecretName: $keyVaultSecretName `n"
@@ -71,13 +78,23 @@ Write-Host "keyVaultName: $keyVaultName `n"
 Set-AzKeyVaultAccessPolicy -ResourceGroupName $keyVaultResourceGroupName -VaultName $keyVaultName -UserPrincipalName $loginId -PermissionsToSecrets get
 Write-Host "Get Secret Access to account $loginId has been granted from the KeyVault, please check and remove the policy after exporting the certificate"
 
+# Allows to display and get secrets *4Debug
+Set-AzKeyVaultAccessPolicy -ResourceGroupName $keyVaultResourceGroupName -VaultName $keyVaultName -UserPrincipalName $loginId -PermissionsToSecrets get,list
+
 ## Getting the secret from the KeyVault
-# $secret = Get-AzKeyVaultSecret -VaultName $keyVaultName -Name $keyVaultSecretName
-# $pfxCertObject= New-Object System.Security.Cryptography.X509Certificates.X509Certificate2 -ArgumentList @([Convert]::FromBase64String($secret.SecretValueText),"",[System.Security.Cryptography.X509Certificates.X509KeyStorageFlags]::Exportable)
-# $pfxPassword = -join ((65..90) + (97..122) + (48..57) | Get-Random -Count 50 | % {[char]$_})
-# $currentDirectory = (Get-Location -PSProvider FileSystem).ProviderPath
-# [Environment]::CurrentDirectory = (Get-Location -PSProvider FileSystem).ProviderPath
-# [io.file]::WriteAllBytes(".\appservicecertificate.pfx",$pfxCertObject.Export([System.Security.Cryptography.X509Certificates.X509ContentType]::Pkcs12,$pfxPassword))
+$secret = Get-AzKeyVaultSecret -VaultName $keyVaultName -Name $keyVaultSecretName -AsPlainText
+$pfxCertObject= New-Object System.Security.Cryptography.X509Certificates.X509Certificate2 -ArgumentList @([Convert]::FromBase64String($secret),"",[System.Security.Cryptography.X509Certificates.X509KeyStorageFlags]::Exportable)
+$pfxPassword = -join ((65..90) + (97..122) + (48..57) | Get-Random -Count 50 | % {[char]$_})
+$currentDirectory = (Get-Location -PSProvider FileSystem).ProviderPath
+
+# Print Variables *4Debug
+Write-Host secret: $secret`n
+Write-Host pfxCertObject: $pfxCertObject`n
+Write-Host pfxPassword: $pfxPassword`n
+Write-Host currentDirectory: $currentDirectory`n
+
+[Environment]::CurrentDirectory = (Get-Location -PSProvider FileSystem).ProviderPath
+[io.file]::WriteAllBytes(".\appservicecertificate.pfx",$pfxCertObject.Export([System.Security.Cryptography.X509Certificates.X509ContentType]::Pkcs12,$pfxPassword))
 
 ## --- !! NOTE !! ----
 ## Remove the Access Policy required for exporting the certificate once you have exported the certificate to prevent giving the account prolonged access to the KeyVault
@@ -92,6 +109,18 @@ Write-Warning "For security reasons, do not store the PFX password. Use it direc
 Write-Host "PFX password: $pfxPassword"
 }
 ```
+
+Now you will have a new command called Export-AppServiceCertificate, use the command as follows:
+
+```PowerShell
+Export-AppServiceCertificate -loginId artiomlk@contoso.com -subscriptionId xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx -resourceGroupName rg-app-where-app-certificate -name my-app-certificate
+```
+
+Once the command is executed, you would see a new file in the current directory called ‘appservicecertificate.pfx’. This is a password protected PFX, the PowerShell console would display the corresponding password. For security reasons, do not store this password in a text file. You can use the password directly from the console as required. Also, don’t forget to delete the local PFX file once you no longer need it.
+
+## Exporting the certificate with the chain included for App Service Web App consumption
+
+The pfx created by the above commands will not include certificates from the chain. Services like Azure App Services expect the certificates that are being uploaded to have all the certificates in the chain included as part of the pfx file. To get the certificates of the chain to be part of the pfx, you will need to install the exported certificate on your machine first using the password that is provided by the script, make sure you mark the certificate as exportable.
 
 [1]: https://azure.github.io/AppService/2017/02/24/Creating-a-local-PFX-copy-of-App-Service-Certificate.html
 [2]: https://docs.microsoft.com/en-us/azure/app-service/configure-ssl-certificate?tabs=apex%2Cportal
