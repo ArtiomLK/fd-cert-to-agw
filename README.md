@@ -21,7 +21,7 @@ Before making a local copy, make sure that you already have:
 You can use the following PowerShell script to create a local PFX copy. You need to first install Azure PowerShell and have the required modules installed. Follow this to [install the Azure PowerShell commandlets][3]. To use the script, open a PowerShell window, copy the entire script below (uncomment Remove-AzKeyVaultAccessPolicy line if you want to remove Access policies after export, check your permissions to see if you want to remove the policy) and paste it on the PowerShell window and hit enter.
 
 ```PowerShell
-Function Export-AppServiceCertificateN
+Function Export-AppServiceCertificate
 {
 ###########################################################
 
@@ -56,18 +56,28 @@ $keyVaultIdParts = $keyVaultId.Split("/")
 $keyVaultName = $keyVaultIdParts[$keyVaultIdParts.Length - 1]
 $keyVaultResourceGroupName = $keyVaultIdParts[$keyVaultIdParts.Length - 5]
 
+# Print Variables
+# Write-Host "ascResource: $ascResource `n"
+# Write-Host "certProps: $certProps `n"
+# Write-Host "keyVaultIdParts: $keyVaultIdParts `n"
+Write-Host "certificateName: $certificateName `n"
+Write-Host "keyVaultId: $keyVaultId `n"
+Write-Host "keyVaultSecretName: $keyVaultSecretName `n"
+Write-Host "keyVaultResourceGroupName: $keyVaultResourceGroupName `n"
+Write-Host "keyVaultName: $keyVaultName `n"
+
 ## --- !! NOTE !! ----
 ## Only users who can set the access policy and has the the right RBAC permissions can set the access policy on KeyVault, if the command fails contact the owner of the KeyVault
 Set-AzKeyVaultAccessPolicy -ResourceGroupName $keyVaultResourceGroupName -VaultName $keyVaultName -UserPrincipalName $loginId -PermissionsToSecrets get
 Write-Host "Get Secret Access to account $loginId has been granted from the KeyVault, please check and remove the policy after exporting the certificate"
 
 ## Getting the secret from the KeyVault
-$secret = Get-AzKeyVaultSecret -VaultName $keyVaultName -Name $keyVaultSecretName
-$pfxCertObject= New-Object System.Security.Cryptography.X509Certificates.X509Certificate2 -ArgumentList @([Convert]::FromBase64String($secret.SecretValueText),"",[System.Security.Cryptography.X509Certificates.X509KeyStorageFlags]::Exportable)
-$pfxPassword = -join ((65..90) + (97..122) + (48..57) | Get-Random -Count 50 | % {[char]$_})
-$currentDirectory = (Get-Location -PSProvider FileSystem).ProviderPath
-[Environment]::CurrentDirectory = (Get-Location -PSProvider FileSystem).ProviderPath
-[io.file]::WriteAllBytes(".\appservicecertificate.pfx",$pfxCertObject.Export([System.Security.Cryptography.X509Certificates.X509ContentType]::Pkcs12,$pfxPassword))
+# $secret = Get-AzKeyVaultSecret -VaultName $keyVaultName -Name $keyVaultSecretName
+# $pfxCertObject= New-Object System.Security.Cryptography.X509Certificates.X509Certificate2 -ArgumentList @([Convert]::FromBase64String($secret.SecretValueText),"",[System.Security.Cryptography.X509Certificates.X509KeyStorageFlags]::Exportable)
+# $pfxPassword = -join ((65..90) + (97..122) + (48..57) | Get-Random -Count 50 | % {[char]$_})
+# $currentDirectory = (Get-Location -PSProvider FileSystem).ProviderPath
+# [Environment]::CurrentDirectory = (Get-Location -PSProvider FileSystem).ProviderPath
+# [io.file]::WriteAllBytes(".\appservicecertificate.pfx",$pfxCertObject.Export([System.Security.Cryptography.X509Certificates.X509ContentType]::Pkcs12,$pfxPassword))
 
 ## --- !! NOTE !! ----
 ## Remove the Access Policy required for exporting the certificate once you have exported the certificate to prevent giving the account prolonged access to the KeyVault
@@ -80,7 +90,6 @@ $currentDirectory = (Get-Location -PSProvider FileSystem).ProviderPath
 Write-Host "Created an App Service Certificate copy at: $currentDirectory\appservicecertificate.pfx"
 Write-Warning "For security reasons, do not store the PFX password. Use it directly from the console as required."
 Write-Host "PFX password: $pfxPassword"
-
 }
 ```
 
