@@ -26,16 +26,16 @@ Function Export-AppServiceCertificateN
 ###########################################################
 
 Param(
-[Parameter(Mandatory=$true,Position=1,HelpMessage="ARM Login Url")]
+[Parameter(Mandatory=$true,Position=1,HelpMessage="ARM Login Url. E.G. artiomlk@contoso.com")]
 [string]$loginId,
 
-[Parameter(Mandatory=$true,HelpMessage="Subscription Id")]
+[Parameter(Mandatory=$true,HelpMessage="Subscription Id. In the format: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx")]
 [string]$subscriptionId,
 
-[Parameter(Mandatory=$true,HelpMessage="Resource Group Name")]
+[Parameter(Mandatory=$true,HelpMessage="Resource Group Name. E.G. rg-app-where-app-certificate")]
 [string]$resourceGroupName,
 
-[Parameter(Mandatory=$true,HelpMessage="Name of the App Service Certificate Resource")]
+[Parameter(Mandatory=$true,HelpMessage="Name of the App Service Certificate Resource. E.G. my-app-certificate")]
 [string]$name
 )
 
