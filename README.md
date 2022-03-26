@@ -10,7 +10,7 @@ Last year, we introduced ‘App Service Certificate’, a certificate lifecycle 
 
 Before making a local copy, make sure that you already have:
 
-1. An App Certificate with either wildcard *.domain.com or subdomain.domain.com
+1. An App Certificate with either wildcard *.domain.com or subdomain.domain.com. [Create an App Service Certificate][4]
 2. A KeyVault where the App Certificate will be stored
 3. Verified the domain ownership (domain.com) If a @ CNAME already exists, it won't allow it
 4. The App Service Certificate is in ‘Issued’ state
@@ -122,6 +122,10 @@ Once the command is executed, you would see a new file in the current directory 
 
 The pfx created by the above commands will not include certificates from the chain. Services like Azure App Services expect the certificates that are being uploaded to have all the certificates in the chain included as part of the pfx file. To get the certificates of the chain to be part of the pfx, you will need to install the exported certificate on your machine first using the password that is provided by the script, make sure you mark the certificate as exportable.
 
+## [Install the Certificate Locally][5]
+
 [1]: https://azure.github.io/AppService/2017/02/24/Creating-a-local-PFX-copy-of-App-Service-Certificate.html
 [2]: https://docs.microsoft.com/en-us/azure/app-service/configure-ssl-certificate?tabs=apex%2Cportal
 [3]: https://docs.microsoft.com/en-us/powershell/azure/install-az-ps?view=azps-7.3.2
+[4]: https://docs.microsoft.com/en-us/azure/app-service/configure-ssl-certificate?tabs=apex%2Cportal#start-certificate-order
+[5]: ./install_cert_wizard.md
