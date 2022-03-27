@@ -122,10 +122,25 @@ Once the command is executed, you would see a new file in the current directory 
 
 The pfx created by the above commands will not include certificates from the chain. Services like Azure App Services expect the certificates that are being uploaded to have all the certificates in the chain included as part of the pfx file. To get the certificates of the chain to be part of the pfx, you will need to install the exported certificate on your machine first using the password that is provided by the script, make sure you mark the certificate as exportable.
 
-## [Install the Certificate Locally][5]
+## 1. [Import the Certificate Locally][5]
+
+## 2. [Install Intermediate and Root Certificates][6]
+
+Go to <https://certs.godaddy.com/repository> and download the intermediate certificates G2 and the root G2 certificate. Install all of the certificates downloaded to the same store as your certificate. Once you confirmed that all the certificates in the chain have been installed we can export the certificate with the chain by going to the certificate store, right clicking on the SSL certificate we exported and installed and clicking of All Tasks -> Export ... In the wizard, make sure you select the option, "Yes, export the private key" And then under the Personal Information Exchange property, make sure the option "Include all certificates in the certification path if possible" is checked.
+
+## 3. Export Certificate
+
+1. Open Manage User Certificates and
+2. Find your installed Azure App Certificate from previous steps
+3. Right Click -> All Tasks -> Export
+4. [Follow this guide to export the Certificate][7]
+
+Once you confirmed that all the certificates in the chain have been installed we can export the certificate with the chain by going to the certificate store, right clicking on the SSL certificate we exported and installed and clicking of All Tasks -> Export ... In the wizard, make sure you select the option, "Yes, export the private key" And then under the Personal Information Exchange property, make sure the option "Include all certificates in the certification path if possible" is checked.
 
 [1]: https://azure.github.io/AppService/2017/02/24/Creating-a-local-PFX-copy-of-App-Service-Certificate.html
 [2]: https://docs.microsoft.com/en-us/azure/app-service/configure-ssl-certificate?tabs=apex%2Cportal
 [3]: https://docs.microsoft.com/en-us/powershell/azure/install-az-ps?view=azps-7.3.2
 [4]: https://docs.microsoft.com/en-us/azure/app-service/configure-ssl-certificate?tabs=apex%2Cportal#start-certificate-order
-[5]: ./install_cert_wizard.md
+[5]: ./import_cert_wizard.md
+[6]: https://certs.godaddy.com/repository
+[7]: ./export_cert_wizard.md
