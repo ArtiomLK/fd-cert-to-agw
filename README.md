@@ -126,16 +126,18 @@ The pfx created by the above commands will not include certificates from the cha
 
 ## 2. [Install Intermediate and Root Certificates][6]
 
-Go to <https://certs.godaddy.com/repository> and download the intermediate certificates G2 and the root G2 certificate. Install all of the certificates downloaded to the same store as your certificate. Once you confirmed that all the certificates in the chain have been installed we can export the certificate with the chain by going to the certificate store, right clicking on the SSL certificate we exported and installed and clicking of All Tasks -> Export ... In the wizard, make sure you select the option, "Yes, export the private key" And then under the Personal Information Exchange property, make sure the option "Include all certificates in the certification path if possible" is checked.
+Go to <https://certs.godaddy.com/repository> and download the intermediate certificates G2 and the root G2 certificate. Install all of the certificates downloaded to the same store as your certificate. Once you confirmed that all the certificates in the chain have been installed we can export the certificate.
 
 ## 3. Export Certificate
 
 1. Open Manage User Certificates and
 2. Find your installed Azure App Certificate from previous steps
-3. Right Click -> All Tasks -> Export
-4. [Follow this guide to export the Certificate][7]
-
-Once you confirmed that all the certificates in the chain have been installed we can export the certificate with the chain by going to the certificate store, right clicking on the SSL certificate we exported and installed and clicking of All Tasks -> Export ... In the wizard, make sure you select the option, "Yes, export the private key" And then under the Personal Information Exchange property, make sure the option "Include all certificates in the certification path if possible" is checked.
+3. Right Click -> All Tasks -> [Export][7]
+   1. [Follow this guide to export the Certificate][7]
+   2. Validate the exported certificate by running the command:
+      1. `certutil -dump <path of the certificate file>`
+         1. `certutil -dump agwappservicecertificate.pfx`
+      2. You will see the list of the certificates that are part of the pfx from the root to your certificate. A pfx file created with the above steps with all the certificates of the chain contained is well formed and can be uploaded to App Service Web Apps with confidence. Note the CA part of the uploaded pfx file will be discarded when we process the uploaded certificate, we store all the intermediate certificates associated with the certificate to enable the chain to be remade properly in the runtime. Once all the export operation is complete and you have successfully uploaded your certificate clean your machine of any trace of the SSL certificate by deleting the certificate from the store to secure your certificate.
 
 [1]: https://azure.github.io/AppService/2017/02/24/Creating-a-local-PFX-copy-of-App-Service-Certificate.html
 [2]: https://docs.microsoft.com/en-us/azure/app-service/configure-ssl-certificate?tabs=apex%2Cportal
