@@ -113,7 +113,8 @@ Write-Host "PFX password: $pfxPassword"
 Now you will have a new command called Export-AppServiceCertificate, use the command as follows:
 
 ```PowerShell
-Export-AppServiceCertificate -loginId artiomlk@contoso.com -subscriptionId xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx -resourceGroupName rg-app-where-app-certificate -name my-app-certificate
+# Replace the values withing the ""
+Export-AppServiceCertificate -loginId "artiomlk@contoso.com" -subscriptionId "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" -resourceGroupName "rg-app-where-app-certificate" -name "my-app-certificate"
 ```
 
 Once the command is executed, you would see a new file in the current directory called ‘appservicecertificate.pfx’. This is a password protected PFX, the PowerShell console would display the corresponding password. For security reasons, do not store this password in a text file. You can use the password directly from the console as required. Also, don’t forget to delete the local PFX file once you no longer need it.
@@ -126,7 +127,8 @@ The pfx created by the above commands will not include certificates from the cha
 
 ## 2. [Install Intermediate and Root Certificates][6]
 
-Go to <https://certs.godaddy.com/repository> and download the intermediate certificates G2 and the root G2 certificate. Install all of the certificates downloaded to the same store as your certificate. Once you confirmed that all the certificates in the chain have been installed we can export the certificate.
+
+Go to <https://certs.godaddy.com/repository> and download the intermediate certificates G2 and the root G2 certificate. For instance (`gdroot-g2.crt` & `gdig2.crt (DER)`) Install all of the certificates downloaded to the same store as your certificate. Once you confirmed that all the certificates in the chain have been installed we can export the certificate. For instance:
 
 ## 3. Export Certificate
 
