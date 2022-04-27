@@ -128,7 +128,7 @@ The pfx created by the above commands will not include certificates from the cha
 ## 2. [Install Intermediate and Root Certificates][6]
 
 
-Go to <https://certs.godaddy.com/repository> and download the intermediate certificates G2 and the root G2 certificate. For instance (`gdroot-g2.crt` & `gdig2.crt (DER)`) Install all of the certificates downloaded to the same store as your certificate. Once you confirmed that all the certificates in the chain have been installed we can export the certificate. For instance:
+Go to <https://certs.godaddy.com/repository> and download the intermediate certificates G2 and the root G2 certificate. For instance, `gdroot-g2.crt` & `gdig2.crt (DER)`. Install all of the certificates downloaded to the same store as your certificate. Once you confirmed that all the certificates in the chain have been installed we can export the certificate. For instance:
 
 ## 3. Export Certificate
 
