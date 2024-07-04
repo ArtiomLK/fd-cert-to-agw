@@ -127,7 +127,6 @@ The pfx created by the above commands will not include certificates from the cha
 
 ## 2. [Install Intermediate and Root Certificates][6]
 
-
 Go to <https://certs.godaddy.com/repository> and download the intermediate certificates G2 and the root G2 certificate. For instance, `gdroot-g2.crt` & `gdig2.crt (DER)`. Install all of the certificates downloaded to the same store as your certificate. Once you confirmed that all the certificates in the chain have been installed we can export the certificate. For instance:
 
 ## 3. Export Certificate
@@ -141,6 +140,10 @@ Go to <https://certs.godaddy.com/repository> and download the intermediate certi
          1. `certutil -dump agwappservicecertificate.pfx`
       2. You will see the list of the certificates that are part of the pfx from the root to your certificate. A pfx file created with the above steps with all the certificates of the chain contained is well formed and can be uploaded to App Service Web Apps with confidence. Note the CA part of the uploaded pfx file will be discarded when we process the uploaded certificate, we store all the intermediate certificates associated with the certificate to enable the chain to be remade properly in the runtime. Once all the export operation is complete and you have successfully uploaded your certificate clean your machine of any trace of the SSL certificate by deleting the certificate from the store to secure your certificate.
 
+## Additional Information
+
+- [Azure Certificate Authority details][8]
+
 [1]: https://azure.github.io/AppService/2017/02/24/Creating-a-local-PFX-copy-of-App-Service-Certificate.html
 [2]: https://docs.microsoft.com/en-us/azure/app-service/configure-ssl-certificate?tabs=apex%2Cportal
 [3]: https://docs.microsoft.com/en-us/powershell/azure/install-az-ps?view=azps-7.3.2
@@ -148,3 +151,4 @@ Go to <https://certs.godaddy.com/repository> and download the intermediate certi
 [5]: ./import_cert_wizard.md
 [6]: https://certs.godaddy.com/repository
 [7]: ./export_cert_wizard.md
+[8]: https://learn.microsoft.com/en-us/azure/security/fundamentals/azure-ca-details
